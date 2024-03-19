@@ -32,9 +32,9 @@ RUN mkdir -p /build && \
     cp ../../libjpeg-turbo/build/.libs/libturbojpeg.so META-INF/lib/linux_arm64/ && \
     jar uvvf libjpeg-turbo*.jar META-INF/lib/*
 
-RUN mkdir /build && \
-    cp /build/libjpeg-turbo-java/build/libs/libjpeg-turbo*.jar /build && \
-    cp -L /build/libjpeg-turbo-java/libjpeg-turbo/build/.libs/*.so /build
+RUN mkdir /release && \
+    cp /build/libjpeg-turbo-java/build/libs/libjpeg-turbo*.jar /release && \
+    cp -L /build/libjpeg-turbo-java/libjpeg-turbo/build/.libs/*.so /release
 
 VOLUME [ "/export" ]
-CMD tar -czf /export/libjpeg-turbo-java.tar.gz --directory=/build .
+CMD tar -czf /export/libjpeg-turbo-java.tar.gz --directory=/release .
