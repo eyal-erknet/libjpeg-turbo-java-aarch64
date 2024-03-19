@@ -27,7 +27,7 @@ jobs:
         run: mkdir -p export
     
       - name: Build Docker image
-        run: docker buildx build --platform linux/arm64 -t libturbojpeg .
+        run: docker buildx build --platform linux/arm64 -t libturbojpeg:latest .
 
       - name: Export library files
         run: docker run --rm -v export:/export libturbojpeg:latest
