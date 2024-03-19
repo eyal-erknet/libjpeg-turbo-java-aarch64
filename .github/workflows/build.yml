@@ -28,15 +28,8 @@ jobs:
     
       - name: Build library
         run: |
-          docker buildx build --platform linux/arm64 -t libturbojpeg .
-          docker run --rm -v export:/export libturbojpeg
-
-      - name: Save artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: export/libjpeg-turbo-java.tar.gz
-          if-no-files-found: error
+          docker buildx build --platform linux/arm64 --load -t libturbojpeg_builder .
+          docker run --rm -v export:/export -t libturbojpeg_builder
     
       - name: Create Release
         id: create_release
