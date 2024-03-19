@@ -1,0 +1,40 @@
+name: Build Library
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        arch: [arm64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: docker buildx build --platform linux/arm64 -t mylibrary .
+
+      - name: Create assets directory
+        run: mkdir -p /export
+
+      - name: Export library files
+        run: docker run --rm -v /export:/export libturbojpeg:latest
+      
+      - name: Save artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: /export/*
+          if-no-files-found: error
