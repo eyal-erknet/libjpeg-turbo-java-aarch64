@@ -26,18 +26,18 @@ jobs:
       - name: Create assets directory
         run: mkdir -p export
     
-      - name: Build Docker image
-        run: docker buildx build --platform linux/arm64 -t libturbojpeg .
+      - name: Build library
+        run: |
+          docker buildx build --platform linux/arm64 -t libturbojpeg .
+          docker run --rm -v export:/export libturbojpeg
 
-      - name: Export library files
-        run: docker run --rm -v export:/export libturbojpeg
-      
       - name: Save artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: export/libjpeg-turbo-java.tar.gz
           if-no-files-found: error
+    
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
