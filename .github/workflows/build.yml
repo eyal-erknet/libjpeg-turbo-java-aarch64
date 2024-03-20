@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-    permissions: write-all
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,7 +29,7 @@ jobs:
       - name: Build library
         run: |
           docker buildx build --platform linux/arm64 --load -t libturbojpeg_builder .
-          docker run --rm -v export:/export -t libturbojpeg_builder
+          docker run --rm -v ./export:/export -t libturbojpeg_builder
     
       - name: Create Release
         id: create_release
@@ -50,6 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: export/libjpeg-turbo-java.tar.gz
+          asset_path: ./export/libjpeg-turbo-java.tar.gz
           asset_name: libjpeg-turbo-java.tar.gz
           asset_content_type: application/gzip
