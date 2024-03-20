@@ -39,7 +39,8 @@ jobs:
         with:
           token: ${{ github.token }}
           name: $(date +'%Y%m%d')
+          tag_name: $(date +'%Y%m%d')-${{ github.run_id }}
           prerelease: false
           draft: false
-          files: .export/*
+          files: ./export/*
           generate_release_notes: false
