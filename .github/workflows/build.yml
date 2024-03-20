@@ -15,8 +15,18 @@ jobs:
         os: [ubuntu-latest]
         arch: [arm64]
     steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Checkout code
         uses: actions/checkout@v4
+    
+      - name: Create tag
+        uses: tvdias/github-tagger@v0.0.2
+        with:
+          repo-token: ${{ github.token }}
+          tag: ${{ steps.date.outputs.date }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -38,8 +48,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ github.token }}
-          name: $(date +'%Y%m%d')
-          tag_name: $(date +'%Y%m%d')-${{ github.run_id }}
+          name: ${{ steps.date.outputs.date }}
+          tag_name: ${{ steps.date.outputs.date }}
           prerelease: false
           draft: false
           files: ./export/*
