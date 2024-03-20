@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    permissions:
+        contents: write
+        discussions: write
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,23 +35,11 @@ jobs:
           docker run --rm -v ./export:/export -t libturbojpeg_builder
     
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.run_id }}
-          release_name: $(date +'%Y%m%d')
-          draft: false
+          token: ${{ github.token }}
+          name: $(date +'%Y%m%d')
           prerelease: false
-        
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./export/libjpeg-turbo-java.tar.gz
-          asset_name: libjpeg-turbo-java.tar.gz
-          asset_content_type: application/gzip
+          draft: false
+          files: .export/*
+          generate_release_notes: false
